@@ -234,6 +234,21 @@
                         return valA - valB;
                     });
 
+                    // Find missing TRANSACTION_NO
+                    const transactionNumbers = allTransactions
+                        .map(trx => parseInt(trx["TRANSACTION_NO"] || "0", 10))
+                        .filter(num => !isNaN(num));
+                    const missingNumbers = [];
+                    if (transactionNumbers.length > 0) {
+                        const min = Math.min(...transactionNumbers);
+                        const max = Math.max(...transactionNumbers);
+                        for (let i = min; i <= max; i++) {
+                            if (!transactionNumbers.includes(i)) {
+                                missingNumbers.push(i);
+                            }
+                        }
+                    }
+
                     // Clear allFields before re-populating
                     for (const key in allFields) {
                         allFields[key] = [];
@@ -249,15 +264,76 @@
                     });
 
                     delete allFields["Transaction"]; // ✅ remove duplicate header if present
-                    displayData(allFields);
+                    displayData(allFields, missingNumbers);
                 }).catch(error => {
                     console.error("Error reading files:", error);
                 });
             });
 
-            function displayData(allFields) {
+            function displayData(allFields, missingNumbers) {
                 const outputDiv = document.getElementById('output');
                 outputDiv.innerHTML = '';
+
+                // Display missing transaction numbers if any
+                if (missingNumbers && missingNumbers.length > 0) {
+                    const missingBox = document.createElement('div');
+                    missingBox.style.position = 'absolute';
+                    missingBox.style.top = '30px';
+                    missingBox.style.right = '30px';
+                    missingBox.style.background = 'white';
+                    missingBox.style.border = '2px solid #dc3545';
+                    missingBox.style.borderRadius = '8px';
+                    missingBox.style.boxShadow = '0 2px 8px rgba(220,53,69,0.15)';
+                    missingBox.style.padding = '16px';
+                    missingBox.style.zIndex = '10';
+                    missingBox.style.minWidth = '220px';
+                    missingBox.style.maxHeight = '300px';
+                    missingBox.style.overflowY = 'auto';
+
+                    const missingMsg = document.createElement('div');
+                    missingMsg.style.color = '#dc3545';
+                    missingMsg.style.marginBottom = '10px';
+                    missingMsg.style.fontWeight = 'bold';
+                    missingMsg.innerHTML = `Missing TRANSACTION_NO count: ${missingNumbers.length}`;
+                    missingBox.appendChild(missingMsg);
+
+                    // Create table for missing numbers
+                    const missingTable = document.createElement('table');
+                    missingTable.style.width = '100%';
+                    missingTable.style.borderCollapse = 'collapse';
+                    const headerRow = document.createElement('tr');
+                    const thIndex = document.createElement('th');
+                    thIndex.innerText = '#';
+                    thIndex.style.background = '#dc3545';
+                    thIndex.style.color = 'white';
+                    const thNumber = document.createElement('th');
+                    thNumber.innerText = 'Missing TRANSACTION_NO';
+                    thNumber.style.background = '#dc3545';
+                    thNumber.style.color = 'white';
+                    headerRow.appendChild(thIndex);
+                    headerRow.appendChild(thNumber);
+                    missingTable.appendChild(headerRow);
+                    missingNumbers.forEach((num, idx) => {
+                        const row = document.createElement('tr');
+                        const tdIndex = document.createElement('td');
+                        tdIndex.innerText = idx + 1;
+                        tdIndex.style.textAlign = 'center';
+                        const tdNumber = document.createElement('td');
+                        tdNumber.innerText = num;
+                        tdNumber.style.textAlign = 'center';
+                        row.appendChild(tdIndex);
+                        row.appendChild(tdNumber);
+                        missingTable.appendChild(row);
+                    });
+                    missingBox.appendChild(missingTable);
+                    outputDiv.appendChild(missingBox);
+                } else if (missingNumbers) {
+                    const missingMsg = document.createElement('div');
+                    missingMsg.style.color = 'green';
+                    missingMsg.style.marginBottom = '10px';
+                    missingMsg.innerHTML = `<b>No missing TRANSACTION_NO found.</b>`;
+                    outputDiv.appendChild(missingMsg);
+                }
 
                 const downloadLink = document.createElement('a');
                 downloadLink.href = '#';
