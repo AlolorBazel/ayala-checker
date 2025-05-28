@@ -1,96 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload & Convert Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin: auto;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .file-label:hover {
+            background-color: #0056b3;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            color: white;
+            background-color: #dc3545;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        a:hover {
+            background-color: #c82333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Upload & Process Transactions</h2>
+        <span id="fileCount" style="margin-right: 10px; font-weight: bold;"></span>
+        <label for="fileInput" class="file-label">Choose Files</label>
+        <input type="file" id="fileInput" multiple required>            
+        <button id="processButton">Upload & Process</button>
+    </div>
+
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function () {
+            const count = this.files.length;
+            const label = count === 1 ? '1 file selected' : `${count} files selected`;
+            document.getElementById('fileCount').innerText = label;
+        });
+
+        document.getElementById('processButton').addEventListener('click', function () {
+            const fileInput = document.getElementById('fileInput');
+            const files = fileInput.files;
+            if (files.length === 0) {
+                alert("Please upload at least one valid file.");
+                return;
+            }
+
+            document.getElementById('output').innerHTML = '';
+            const allTransactions = [];
+            const allFields = {};
+            let transactionId = 1;
+
+            const readFiles = Array.from(files).map(file => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = function (event) {
+                        const fileContent = event.target.result;
+                        const lines = fileContent.split("\n").map(line => line.trim());
+                        let currentTransaction = {};
+                        let trxNo = 0;
+
+                        // Extract NO_TRN for horizontal spacing
+                        for (const line of lines) {
+                            if (line) {
+                                const parts = line.split(",", 2);
+                                if (parts.length === 2) {
+                                    const key = parts[0].trim();
+                                    const value = parts[1].trim();
+                                    if (key === "NO_TRN") {
+                                        trxNo = parseInt(value, 10);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+
+                        for (const line of lines) {
+                            if (line) {
+                                const parts = line.split(",", 2);
+                                if (parts.length === 2) {
+                                    const key = parts[0].trim();
+                                    let value = parts[1].trim();
+
+                                    if (key === "Transaction") continue; // ⛔️ skip footer row if present
+
+                                    if (["CCCODE", "MERCHANT_NAME", "TRN_DATE", "NO_TRN"].includes(key)) {
+                                        const valueToRepeat = value;
+                                        const emptyCells = Array(trxNo - 1).fill("");
+                                        const fullRow = [valueToRepeat, ...emptyCells];
+                                        allFields[key] = allFields[key] || [];
+                                        allFields[key].push(...fullRow);
+                                        continue;
+                                    }
+
+                                    if (key === "CDATE" && Object.keys(currentTransaction).length > 0) {
+                                        allTransactions.push(currentTransaction);
+                                        currentTransaction = { "Transaction": "Transaction " + transactionId };
+                                        transactionId++;
+                                    }
+
+                                    currentTransaction[key] = value;
+                                }
+                            }
+                        }
+
+                        if (Object.keys(currentTransaction).length > 0) {
+                            allTransactions.push(currentTransaction);
+                        }
+
+                        resolve();
+                    };
+                    reader.onerror = reject;
+                    reader.readAsText(file);
+                });
+            });
+
+            Promise.all(readFiles).then(() => {
+                allTransactions.forEach(transaction => {
+                    for (const key in transaction) {
+                        if (!allFields[key]) {
+                            allFields[key] = [];
+                        }
+                        allFields[key].push(transaction[key]);
+                    }
+                });
+
+                delete allFields["Transaction"]; // ✅ remove duplicate header if present
+                displayData(allFields);
+            }).catch(error => {
+                console.error("Error reading files:", error);
+            });
+        });
+
+        function displayData(allFields) {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = '';
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = '#';
+            downloadLink.innerText = 'Download CSV';
+            downloadLink.addEventListener('click', function () {
+                downloadCSV(allFields);
+            });
+            outputDiv.appendChild(downloadLink);
+            outputDiv.appendChild(document.createElement('br'));
+
+            const table = document.createElement('table');
+            const headerRow = document.createElement('tr');
+            const headerCell = document.createElement('th');
+            headerCell.innerText = 'FIELD';
+            headerRow.appendChild(headerCell);
+
+            const actualTransactionCount = Math.max(...Object.values(allFields).map(values => values.length));
+            for (let i = 1; i <= actualTransactionCount; i++) {
+                const cell = document.createElement('th');
+                cell.innerText = 'Transaction ' + i;
+                headerRow.appendChild(cell);
+            }
+            table.appendChild(headerRow);
+
+            for (const key in allFields) {
+                const row = document.createElement('tr');
+                const fieldCell = document.createElement('td');
+                fieldCell.innerText = key;
+                row.appendChild(fieldCell);
+
+                for (let i = 0; i < actualTransactionCount; i++) {
+                    const cell = document.createElement('td');
+                    cell.innerText = (allFields[key][i] || '').replace(/,/g, ''); // no commas in display
+                    row.appendChild(cell);
+                }
+
+                table.appendChild(row);
+            }
+
+            outputDiv.appendChild(table);
+        }
+
+        function downloadCSV(allFields) {
+            let csvContent = "";
+            for (const key in allFields) {
+                csvContent += key + "," + allFields[key].join(",") + "\n";
+            }
+
+            const blob = new Blob([csvContent], { type: "text/csv" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "merged_transactions.txt"; // ✅ clean name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
 </html>
