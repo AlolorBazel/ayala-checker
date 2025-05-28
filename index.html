@@ -160,6 +160,12 @@
                 document.getElementById('output').innerHTML = '';
                 const allTransactions = [];
                 const allFields = {};
+                const specialFields = {
+                    CCCODE: [],
+                    MERCHANT_NAME: [],
+                    TRN_DATE: [],
+                    NO_TRN: []
+                };
                 let transactionId = 1;
 
                 const readFiles = Array.from(files).map(file => {
@@ -170,6 +176,7 @@
                             const lines = fileContent.split("\n").map(line => line.trim());
                             let currentTransaction = {};
                             let trxNo = 0;
+                            let groupValues = {};
 
                             // Extract NO_TRN for horizontal spacing
                             for (const line of lines) {
@@ -180,7 +187,11 @@
                                         const value = parts[1].trim();
                                         if (key === "NO_TRN") {
                                             trxNo = parseInt(value, 10);
+                                            groupValues["NO_TRN"] = value;
                                             break;
+                                        }
+                                        if (["CCCODE", "MERCHANT_NAME", "TRN_DATE"].includes(key)) {
+                                            groupValues[key] = value;
                                         }
                                     }
                                 }
@@ -193,14 +204,17 @@
                                         const key = parts[0].trim();
                                         let value = parts[1].trim();
 
-                                        if (key === "Transaction") continue; // ⛔️ skip footer row if present
+                                        if (key === "Transaction") continue; // ⛔️ skip foot    r row if present
 
+                                        // Only add special fields once per group
                                         if (["CCCODE", "MERCHANT_NAME", "TRN_DATE", "NO_TRN"].includes(key)) {
-                                            const valueToRepeat = value;
-                                            const emptyCells = Array(trxNo - 1).fill("");
-                                            const fullRow = [valueToRepeat, ...emptyCells];
-                                            allFields[key] = allFields[key] || [];
-                                            allFields[key].push(...fullRow);
+                                            // Only add when we first see the field in this group
+                                            if (groupValues[key]) {
+                                                let repeat = parseInt(groupValues["NO_TRN"] || "1", 10);
+                                                specialFields[key].push(groupValues[key]);
+                                                for (let i = 1; i < repeat; i++) specialFields[key].push("");
+                                                groupValues[key] = undefined; // Prevent duplicate for this group
+                                            }
                                             continue;
                                         }
 
@@ -262,6 +276,11 @@
                             allFields[key].push(transaction[key]);
                         }
                     });
+
+                    // Merge special fields into allFields
+                    for (const key in specialFields) {
+                        allFields[key] = specialFields[key];
+                    }
 
                     delete allFields["Transaction"]; // ✅ remove duplicate header if present
                     displayData(allFields, missingNumbers);
@@ -358,19 +377,43 @@
                 }
                 table.appendChild(headerRow);
 
-                for (const key in allFields) {
-                    const row = document.createElement('tr');
-                    const fieldCell = document.createElement('td');
-                    fieldCell.innerText = key;
-                    row.appendChild(fieldCell);
+                // List your special fields in the order you want them at the top
+                const specialOrder = ["CCCODE", "MERCHANT_NAME", "TRN_DATE", "NO_TRN"];
 
-                    for (let i = 0; i < actualTransactionCount; i++) {
-                        const cell = document.createElement('td');
-                        cell.innerText = (allFields[key][i] || '').replace(/,/g, ''); // no commas in display
-                        row.appendChild(cell);
+                // Render special fields first
+                specialOrder.forEach(key => {
+                    if (allFields[key]) {
+                        const row = document.createElement('tr');
+                        const fieldCell = document.createElement('td');
+                        fieldCell.innerText = key;
+                        row.appendChild(fieldCell);
+
+                        for (let i = 0; i < actualTransactionCount; i++) {
+                            const cell = document.createElement('td');
+                            cell.innerText = (allFields[key][i] || '').replace(/,/g, '');
+                            row.appendChild(cell);
+                        }
+
+                        table.appendChild(row);
                     }
+                });
 
-                    table.appendChild(row);
+                // Render the rest of the fields (excluding the special ones)
+                for (const key in allFields) {
+                    if (!specialOrder.includes(key)) {
+                        const row = document.createElement('tr');
+                        const fieldCell = document.createElement('td');
+                        fieldCell.innerText = key;
+                        row.appendChild(fieldCell);
+
+                        for (let i = 0; i < actualTransactionCount; i++) {
+                            const cell = document.createElement('td');
+                            cell.innerText = (allFields[key][i] || '').replace(/,/g, '');
+                            row.appendChild(cell);
+                        }
+
+                        table.appendChild(row);
+                    }
                 }
 
                 outputDiv.appendChild(table);
@@ -378,14 +421,24 @@
 
             function downloadCSV(allFields) {
                 let csvContent = "";
+                const specialOrder = ["CCCODE", "MERCHANT_NAME", "TRN_DATE", "NO_TRN"];
+                // Write special fields first
+                specialOrder.forEach(key => {
+                    if (allFields[key]) {
+                        csvContent += key + "," + allFields[key].join(",") + "\n";
+                    }
+                });
+                // Write the rest of the fields
                 for (const key in allFields) {
-                    csvContent += key + "," + allFields[key].join(",") + "\n";
+                    if (!specialOrder.includes(key)) {
+                        csvContent += key + "," + allFields[key].join(",") + "\n";
+                    }
                 }
 
                 const blob = new Blob([csvContent], { type: "text/csv" });
                 const link = document.createElement("a");
                 link.href = URL.createObjectURL(blob);
-                link.download = "merged_transactions.txt"; // ✅ clean name
+                link.download = "downloadedcsv.txt"; // ✅ clean name
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
