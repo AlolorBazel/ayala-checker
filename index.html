@@ -227,6 +227,18 @@
                 });
 
                 Promise.all(readFiles).then(() => {
+                    // Sort transactions by TRANSACTION_NO (low to high)
+                    allTransactions.sort((a, b) => {
+                        const valA = parseInt(a["TRANSACTION_NO"] || "0", 10);
+                        const valB = parseInt(b["TRANSACTION_NO"] || "0", 10);
+                        return valA - valB;
+                    });
+
+                    // Clear allFields before re-populating
+                    for (const key in allFields) {
+                        allFields[key] = [];
+                    }
+
                     allTransactions.forEach(transaction => {
                         for (const key in transaction) {
                             if (!allFields[key]) {
