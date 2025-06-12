@@ -2,11 +2,11 @@
     "rewrites": [
         {
             "source": "/",
-            "destination": "/home.html"
+            "destination": "/resources.html"
         },
         {
-            "source": "/home",
-            "destination": "/home.html"
+            "source": "/resources",
+            "destination": "/resources.html"
         },
         {
             "source": "/arenata",

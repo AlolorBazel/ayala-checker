@@ -248,6 +248,7 @@ function displayData(allFields, missingNumbers) {
     // ---- CSV DOWNLOAD LINK ----
     const downloadLink = document.createElement('a');
     downloadLink.href = '#';
+    downloadLink.classList.add("download-csv");
     downloadLink.innerText = 'Download CSV';
     downloadLink.addEventListener('click', function () {
         downloadCSV(allFields);

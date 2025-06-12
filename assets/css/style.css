@@ -34,7 +34,10 @@ input[type="file"] {
 }
 
 .file-label:hover {
-    background-color: #0056b3;
+        background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0d6efd;
+    transform: translateY(-2px);
 }
 
 button , select {
@@ -49,8 +52,10 @@ button , select {
 }
 
 button:hover {
-    background-color: #007acc;
-    color: white;
+      background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0d6efd;
+    transform: translateY(-2px);
 }
 
 table {
@@ -89,16 +94,54 @@ tr:nth-child(even) {
 }
 
 #clear:hover {
-    background-color: #007acc;
-    color: white;       
+    background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0d6efd;
+    transform: translateY(-2px);     
 }
 
 #downloadBtn:hover {
-    background-color: #007acc;
-    color: white;
+    background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0d6efd;
+    transform: translateY(-2px);
 }
 
-a {
+
+.nav-list {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-list a {
+    height: 30px;
+    width: 120px;
+    background-color: #ffffff;    
+    color: #0d6efd;
+    font-weight: 600;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-list a:hover {
+    background-color: #0b5ed7;
+    color: #ffffff;
+    border-color: #0d6efd;
+    transform: translateY(-2px);
+}
+
+
+.download-csv {
     display: inline-block;
     margin-top: 15px;
     color: white;
@@ -109,6 +152,6 @@ a {
     transition: 0.3s;
 }
 
-a:hover {
+.download-csv:hover {
     background-color: #c82333;
 }

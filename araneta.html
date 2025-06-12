@@ -11,18 +11,20 @@
 <body>
 
   <div class="container">
+      <ul class="nav-list">
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="ayala.html"> Ayala</a></li>
+        <li><a href="araneta.html"> Araneta</a></li>
+        <li><a href="">Upcoming</a></li>
+        <li><a href="">More</a></li>
+    </ul>
 
    <h2>CHECKER ARANETA</h2>
   <div>
-  <span id="fileCount" style="margin-right: 10px; font-weight: bold;"></span>
-  <label for="fileInput" class="file-label">Choose Files</label>
-  <input type="file" id="fileInput" multiple required>
-</div> 
-        <select name="tenant" id="tenant" onchange="navigateToPage(this.value)">
-          <option value="araneta.html">Araneta</option>
-          <option value="ayala.html">Ayala</option>
-          <option value="home.html">Home</option>
-        </select>
+    <span id="fileCount" style="margin-right: 10px; font-weight: bold;"></span>
+    <label for="fileInput" class="file-label">Choose Files</label>
+    <input type="file" id="fileInput" multiple required>
+  </div> 
 
   <button id="uploadBtn">Upload</button>
   <button id="clear">Clear</button>

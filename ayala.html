@@ -11,23 +11,24 @@
 <body>
 
   <div class="container">
-    <h2>CHECKER AYALA</h2>
-
-    <span id="fileCount" style="margin-right: 10px; font-weight: bold;"></span>
-
+    <ul class="nav-list">
+        <li><a href="resources.html">Resources</a></li>
+        <li><a href="ayala.html"> Ayala</a></li>
+        <li><a href="araneta.html"> Araneta</a></li>
+        <li> <a href="">Upcoming</a></li>
+        <li><a href="">More</a></li>
+    </ul>
+    <h2>AYALA CHECKER</h2>
+  <div>
+    <span id="fileCount" style="margin-right: 10px; font-weight: bold; color:white;"></span>
     <label for="fileInput" class="file-label">Choose Files</label>
-    <input type="file" id="fileInput" multiple required/>
+    <input type="file" id="fileInput" multiple required>
+  </div> 
+    <button id="processButton" class="btn btn-green">Upload</button>
+    <button id="clear" class="btn btn-yellow">Clear</button>
+    <button id="downloadBtn" class="btn btn-red">Empty Template</button>
 
-    <div class="button-group">
-      <select name="tenant" id="tenant" onchange="navigateToPage(this.value)">
-        <option value="ayala.html">Ayala</option>
-        <option value="home.html">Home</option>
-        <option value="araneta.html">Araneta</option>
-      </select>
 
-      <button id="downloadBtn" class="btn btn-red">Empty Checker Download</button>
-      <button id="clear" class="btn btn-yellow">Clear</button>
-      <button id="processButton" class="btn btn-green">Upload & Process</button>
     </div>
   </div>
 
