@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const headerRow = document.getElementById("headerRow");
   const tableBody = document.getElementById("tableBody");
   const downloadBtn = document.getElementById("downloadBtn");
+  const clearBtn = document.getElementById("clear");
+
   let selectedFiles = [];
 
   fileInput.addEventListener("change", function (event) {
@@ -18,59 +20,46 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
+    // Clear old headers except the first one
     while (headerRow.children.length > 1) {
       headerRow.removeChild(headerRow.lastChild);
     }
 
-    const allData = [];
+    // Clear existing data cells
+    const rows = tableBody.querySelectorAll("tr");
+    rows.forEach(row => {
+      while (row.children.length > 1) {
+        row.removeChild(row.lastChild);
+      }
+    });
+
     let filesRead = 0;
 
-    selectedFiles.forEach((file, i) => {
+    selectedFiles.forEach((file, fileIndex) => {
       const reader = new FileReader();
+
       reader.onload = function (e) {
-        const content = e.target.result.trim();
-        const firstLine = content.split("\n")[0];
-        const values = firstLine.split(",");
+        const lines = e.target.result.trim().split("\n");
 
-        allData[i] = values;
+        lines.forEach((line, lineIndex) => {
+          const values = line.split(",");
 
-        const th = document.createElement("th");
-        th.textContent = file.name;
-        headerRow.appendChild(th);
+          // Add header column: filename - line #
+          const th = document.createElement("th");
+          th.textContent = `${file.name} - Line ${lineIndex + 1}`;
+          headerRow.appendChild(th);
+
+          const rows = tableBody.querySelectorAll("tr");
+          for (let i = 0; i < rows.length; i++) {
+            const cell = document.createElement("td");
+            cell.textContent = values[i] || "";
+            rows[i].appendChild(cell);
+          }
+        });
 
         filesRead++;
-        if (filesRead === selectedFiles.length) {
-          const maxRows = Math.max(...allData.map(arr => arr.length));
-          const existingRows = tableBody.querySelectorAll("tr");
-
-          for (let j = 0; j < existingRows.length; j++) {
-            if (j < maxRows) {
-              allData.forEach(values => {
-                const cell = document.createElement("td");
-                cell.textContent = values[j] || "";
-                existingRows[j].appendChild(cell);
-              });
-            } else {
-              tableBody.removeChild(existingRows[j]);
-            }
-          }
-
-          for (let rowIndex = existingRows.length; rowIndex < maxRows; rowIndex++) {
-            const row = document.createElement("tr");
-            const fieldCell = document.createElement("td");
-            fieldCell.textContent = "";
-            row.appendChild(fieldCell);
-
-            allData.forEach(values => {
-              const cell = document.createElement("td");
-              cell.textContent = values[rowIndex] || "";
-              row.appendChild(cell);
-            });
-
-            tableBody.appendChild(row);
-          }
-        }
       };
+
       reader.readAsText(file);
     });
   });
@@ -95,25 +84,21 @@ document.addEventListener("DOMContentLoaded", function () {
     link.click();
     document.body.removeChild(link);
   });
-  
-  document.getElementById("clear").addEventListener("click", function () {
-  fileInput.value = "";
-  selectedFiles = [];
-  document.getElementById("fileCount").innerText = "";
 
-  // Remove all <th> except the first one (Field Name)
-  while (headerRow.children.length > 1) {
-    headerRow.removeChild(headerRow.lastChild);
-  }
+  clearBtn.addEventListener("click", function () {
+    fileInput.value = "";
+    selectedFiles = [];
+    document.getElementById("fileCount").innerText = "";
 
-  // Clear data cells in each row but keep the first cell (field name)
-  const rows = tableBody.querySelectorAll("tr");
-  rows.forEach(row => {
-    while (row.children.length > 1) {
-      row.removeChild(row.lastChild);
+    while (headerRow.children.length > 1) {
+      headerRow.removeChild(headerRow.lastChild);
     }
+
+    const rows = tableBody.querySelectorAll("tr");
+    rows.forEach(row => {
+      while (row.children.length > 1) {
+        row.removeChild(row.lastChild);
+      }
+    });
   });
-});
-
-
 });
